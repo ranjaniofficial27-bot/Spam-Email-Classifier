@@ -1,21 +1,3 @@
-Spam Email Classifier
-
-A machine learning project to detect and filter spam emails based on message content.  
-Implemented using **Naive Bayes** and **Support Vector Machines (SVM)** with scikit‑learn.
-
----
-
-#Features
-- Preprocesses text using **CountVectorizer** + **TF‑IDF**
-- Trains two classifiers:
-  - Multinomial Naive Bayes
-  - Linear SVM
-- Evaluates with accuracy, precision, recall, F1‑score
-- Visualizes confusion matrices
-- Allows testing with custom email text
-
-
-
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -26,13 +8,13 @@ from sklearn.svm import LinearSVC
 from sklearn.pipeline import Pipeline
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
 
-# 1. Load Dataset
+
 df = pd.read_csv(r"C:\Users\Asus\Downloads\spam.csv", encoding="latin-1")
 
-# Drop empty/unnecessary columns
+
 df = df.dropna(axis=1, how='all')
 
-# Handle different dataset versions
+
 if 'v1' in df.columns and 'v2' in df.columns:
     df = df[['v1','v2']]
     df.columns = ['label','message']
@@ -44,15 +26,15 @@ else:
     df = df.iloc[:, :2]
     df.columns = ['label','message']
 
-# Convert labels to binary
+
 df['label'] = df['label'].map({'ham':0, 'spam':1})
 
-# 2. Train-Test Split
+
 X_train, X_test, y_train, y_test = train_test_split(
     df['message'], df['label'], test_size=0.2, random_state=42
 )
 
-# 3. Naive Bayes Pipeline
+
 nb_pipeline = Pipeline([
     ('vect', CountVectorizer(stop_words='english')),
     ('tfidf', TfidfTransformer()),
@@ -66,7 +48,7 @@ print(" Naive Bayes Results")
 print("Accuracy:", accuracy_score(y_test, nb_preds))
 print(classification_report(y_test, nb_preds))
 
-# 4. SVM Pipeline
+
 svm_pipeline = Pipeline([
     ('vect', CountVectorizer(stop_words='english')),
     ('tfidf', TfidfTransformer()),
@@ -80,7 +62,7 @@ print("\n SVM Results")
 print("Accuracy:", accuracy_score(y_test, svm_preds))
 print(classification_report(y_test, svm_preds))
 
-# 5. Confusion Matrix Plot
+
 def plot_confusion(y_true, y_pred, title):
     cm = confusion_matrix(y_true, y_pred)
     fig, ax = plt.subplots()
@@ -100,11 +82,12 @@ def plot_confusion(y_true, y_pred, title):
 plot_confusion(y_test, nb_preds, "Naive Bayes Confusion Matrix")
 plot_confusion(y_test, svm_preds, "SVM Confusion Matrix")
 
-# 6. Test with Custom Email
+
 test_email = ["Congratulations! You won a free ticket. Click here to claim."]
 print("\n Custom Email Prediction:")
 print("Naive Bayes:", nb_pipeline.predict(test_email)[0])
 print("SVM:", svm_pipeline.predict(test_email)[0])
+
 Naive Bayes Results
 Accuracy: 0.97
               precision    recall  f1-score   support
